@@ -1,5 +1,6 @@
 body {
 	background-color: #cfcfcf;
+	font-family: 'Niconne', cursive;
 }
 
 .container {
@@ -8,3 +9,8 @@ body {
 	margin-right: 25%;
 	background-color: white; 
 }
+
+.candidate-container {
+	padding-top: 4%;
+}
+
