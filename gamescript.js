@@ -5,6 +5,7 @@ var availableParties = [];
 var availableCitizenAttributes = [];
 var availableLocations = [];
 var availablePolicies = [];
+var availableNames = [];
 
 function AttributeContainer(name, listOfAttributes){
 	this.name = name;
@@ -122,11 +123,11 @@ function init(){
 			new Policy("Raise unemployment benefits", "Not Employed", "Employed"),
 			new Policy("Lower unemployment benefits", "Employed", "Not Employed"),
 			new Policy("Raise income tax", "Transportation", "Employed"),
-			new Policy("Lower income tax", "Employed", "Transportation")
+			new Policy("Lower income tax", "Employed", "Public transportation")
 		]),
 		new PolicyContainer("Business", [
-			new Policy("Raise Business tax", "Transportation", "Business owner"),
-			new Policy("Lower Business tax", "Business owner", "Transportation"),
+			new Policy("Raise Business tax", "Public transportation", "Business owner"),
+			new Policy("Lower Business tax", "Business owner", "Public transportation"),
 			new Policy("Support small Business", "Business owner", "Upper class")
 		])
 
@@ -139,7 +140,9 @@ function init(){
 	"Lependent Party", "Labo Party", "Riberal Party"];
 	availableLocations = ["Slightly New York", "The Outback", "Mars", "ISS", "Kalifornia",
 	"FloorIda", "Wishonsolo", "The Choclate Factory", "Paris, Le French", "The North Pole", 
-	"West Korea", "Mother Russia", "象形字關転"];
+	"West Korea", "Mother Russia", "Unknown"];
+	availableNames = ["Congressman Bill", "Prince George", "Bob", "Billy bob", "Actor Bill Murray", 
+	"Joe the plumber", "Obama", "Charles the 3rd", "Mayor Doomberg", "Astronaut Chris Hadfield", "Kony(2012)"];
 	test();
 }
 
@@ -156,7 +159,7 @@ $(document).ready(function(){
 		var candidateName = $('<p class="candidate-name"></p>');
 		$(candidateName).text(candidate.name);
 		var candidateInfo = $('<p class="candidate-info"></p>');
-		$(candidateInfo).text(candidate.location + " " + candidate.party);
+		$(candidateInfo).text(candidate.location + " | " + candidate.party);
 		var policyHeader = $('<h3 class="policy-header">Policies</h3>');
 
 		candidateDiv.append(candidateName);
@@ -212,15 +215,20 @@ function generateCitizens(){
 }
 
 function generateCandidates(){
-	for(var cIndex = 0; cIndex < 3; cIndex++){
+	var toMake = getRandomNumberInRange(3, 5);
+	for(var cIndex = 0; cIndex < toMake; cIndex++){
 		var party = getRandomParty();
 		var policies = [];
 		for(pIndex = 0; pIndex < availablePolicies.length; pIndex++){
 			policies.push(availablePolicies[pIndex].getPolicy());
 		}
 		//console.log(party + " " + policies);
-		candidates.push(new Candidate("Test name # " + cIndex, getRandomLocation(), party, policies));
+		candidates.push(new Candidate(getRandomName(), getRandomLocation(), party, policies));
 	}
+}
+
+function getRandomNumberInRange(min, max){
+	return Math.random() * (max - min) + min;
 }
 
 function getRandomParty(){
@@ -229,4 +237,8 @@ function getRandomParty(){
 
 function getRandomLocation(){
 	return availableLocations[Math.floor(Math.random() * availableLocations.length)];	
+}
+
+function getRandomName(){
+	return availableNames[Math.floor(Math.random() * availableNames.length)];
 }
