@@ -125,7 +125,7 @@ function init(){
 		new PolicyContainer("Employment", [
 			new Policy("Raise unemployment benefits", "Not Employed", "Employed"),
 			new Policy("Lower unemployment benefits", "Employed", "Not Employed"),
-			new Policy("Raise income tax", "Transportation", "Employed"),
+			new Policy("Raise income tax", "Public transportation", "Employed"),
 			new Policy("Lower income tax", "Employed", "Public transportation")
 		]),
 		new PolicyContainer("Business", [
@@ -187,6 +187,20 @@ $(document).ready(function(){
 			percentEffected = percentEffected.toFixed(0);
 			$(policyEffects).text(percentEffected + "% of the population is effected by this policy. Of these people " + posEffect + "% are affected positively and " + negEffect + "% are affected negatively.")
 			candidateDiv.append(policyEffects);
+
+			var graphContainer = $('<div class="graph-container"></div>');
+			var grayBar = $('<div class="graph-box graph-gray"></div>');
+			var redBar = $('<div class="graph-box graph-red"></div>');
+			var greenBar = $('<div class="graph-box graph-green"></div>');
+			$(greenBar).css("width", posEffect + "px");
+			$(redBar).css({"width": negEffect + "px", "padding-left": posEffect + "px"});
+
+			graphContainer.append(grayBar);
+			graphContainer.append(redBar);
+			graphContainer.append(greenBar);
+
+			candidateDiv.append(graphContainer);
+			candidateDiv.append($('<br>'));
 		}
 
 		var voteButton = $('<button class="vote-button">Vote!</button>');
