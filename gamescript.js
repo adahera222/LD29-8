@@ -1,6 +1,8 @@
 var citizens = [];
 var candidates = [];
 
+var societyBar = 0;
+
 var availableParties = [];
 var availableCitizenAttributes = [];
 var availableLocations = [];
@@ -68,7 +70,8 @@ Policy.prototype.getPeopleNegativelyAffected = function(){
 	return total;
 }
 
-function Candidate(name, location, party, policies){
+function Candidate(id, name, location, party, policies){
+	this.id = id;
 	this.name = name;
 	this.location = location;
 	this.party = party;
@@ -134,15 +137,16 @@ function init(){
 		//Criminal stuff
 		//Gov. aid
 		//Law
+		//Trade
 
 	];
 	availableParties = ["ReDublican Party", "DemoRat Party", "Ibertarian Party", 
 	"Lependent Party", "Labo Party", "Riberal Party"];
 	availableLocations = ["Slightly New York", "The Outback", "Mars", "ISS", "Kalifornia",
 	"FloorIda", "Wishonsolo", "The Choclate Factory", "Paris, Le French", "The North Pole", 
-	"West Korea", "Mother Russia", "Unknown"];
+	"West Korea", "Mother Russia", "Unknown", "CanaSorry"];
 	availableNames = ["Congressman Bill", "Prince George", "Bob", "Billy bob", "Actor Bill Murray", 
-	"Joe the plumber", "Obama", "Charles the 3rd", "Mayor Doomberg", "Astronaut Chris Hadfield", "Kony(2012)"];
+	"Joe the plumber", "O' Lama", "Charles the 3rd", "Mayor Doomberg", "Astronaut Chris Hadfield", "Kony(2012)"];
 	test();
 }
 
@@ -185,7 +189,10 @@ $(document).ready(function(){
 			candidateDiv.append(policyEffects);
 		}
 
+		var voteButton = $('<button class="vote-button">Vote!</button>');
+		$(voteButton).attr('id', candidate.id);
 		var seperator = $('<hr class="candidate-seperator">');
+		candidateDiv.append(voteButton);
 		candidateDiv.append(seperator);
 
 		containerDiv.append(candidateDiv);
@@ -193,6 +200,11 @@ $(document).ready(function(){
 
 	//After everything is done
 	$('.REMOVE-AFTER-LOAD').remove();
+
+	$('.vote-button').on("click", function(){
+		handleVote($(this).attr('id'));
+	});
+
 });
 
 function test(){
@@ -203,7 +215,7 @@ function test(){
 }
 
 function generateCitizens(){
-	for(var cIndex = 0; cIndex < 100; cIndex++){
+	for(var cIndex = 0; cIndex < 200; cIndex++){
 		var party = getRandomParty();
 		var attributes = [];
 		for(aIndex = 0; aIndex < availableCitizenAttributes.length; aIndex++){
@@ -223,8 +235,47 @@ function generateCandidates(){
 			policies.push(availablePolicies[pIndex].getPolicy());
 		}
 		//console.log(party + " " + policies);
-		candidates.push(new Candidate(getRandomName(), getRandomLocation(), party, policies));
+		candidates.push(new Candidate(cIndex, getRandomName(), getRandomLocation(), party, policies));
 	}
+}
+
+function handleVote(id){
+	$('.candidate-container').remove();
+	var candidate = getCanidateByID(id);
+	for(var index = 0; index < candidate.policies.length; index++){
+		var policy = candidate.policies[index];
+		var posPeople = policy.getPeoplePositivelyAffected();
+		var negPeople = policy.getPeopleNegativelyAffected();
+		societyBar += posPeople - negPeople;
+		console.log("Round 1 = " + societyBar);
+/*		var citizensLeft = citizens.length - (posPeople + negPeople);
+		if(citizensLeft < citizens.length){
+			var newPos = 0;
+			var newNeg = 0;
+			for(var cIndex = 0; cIndex < citizensLeft; cIndex++){
+				var picked = getRandomNumberInRange(0, posPeople + negPeople);
+				if(picked <= posPeople){
+					newPos++;
+				}
+				else{
+					newNeg++;
+				}
+			}
+			//ocietyBar += (newPos - negPeople) * 2;
+			//console.log("Round 2 = " + societyBar);
+		}*/
+	}
+	console.log("Final = " + societyBar);
+	//Show user if they won or lost, offer reset, credits/code	
+}
+
+function getCanidateByID(id){
+	for(var index = 0; index < candidates.length; index++){
+		if(candidates[index].id == id){
+			return candidates[index];
+		}
+	}
+	return null;
 }
 
 function getRandomNumberInRange(min, max){

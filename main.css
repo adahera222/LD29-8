@@ -39,3 +39,10 @@ body {
 .policy-effects {
 	font-size: 20px;
 }
+
+.vote-button {
+	width: 128px;
+	height: 64px;
+	background-color: #3794f1;
+	color: white;
+}
