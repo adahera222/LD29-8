@@ -11,6 +11,30 @@ body {
 }
 
 .candidate-container {
-	padding-top: 4%;
+	padding-top: 2%;
 }
 
+.candidate-name {
+	text-align: center;
+	font-size: 36px;
+	line-height: 0;
+}
+
+.candidate-info {
+	text-align: center;
+	font-size: 24px;
+}
+
+.policy-header {
+	font-size: 28px;
+	line-height: 0.5;
+}
+
+.policy-title {
+	font-size: 24px;
+	line-height: 0.5;
+}
+
+.policy-effects {
+	font-size: 20px;
+}

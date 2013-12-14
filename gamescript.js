@@ -1,6 +1,17 @@
 var citizens = [];
 var candidates = [];
 
+var availableCitizenAttributes = [];
+
+function AttributeContainer(name, listOfAttributes){
+	this.name = name;
+	this.listOfAttributes = listOfAttributes;
+}
+
+AttributeContainer.prototype.getAttribute = function(){
+	return this.listOfAttributes[Math.floor(Math.random() * this.listOfAttributes.length)];	
+}
+
 function Citizen(party, attributes){
 	this.party = party;
 	this.attributes = attributes;
@@ -55,8 +66,20 @@ function Candidate(name, location, party, policies){
 * Used for creating game data when the game is loaded
 */
 function init(){
+	availableCitizenAttributes = [
+	new AttributeContainer("Income", ["Lower class", "Middle class", "Upper class"]),
+	new AttributeContainer("Age", ["Young", "Middle aged", "Elderly"]),
+	new AttributeContainer("Job", ["Business owner", "Employed", "Not Employed"]),
+	new AttributeContainer("Family", ["Parent", "Not parent"]),
+	new AttributeContainer("Military", ["Active duty", "Veteran", "Civilian"]),
+	new AttributeContainer("Criminal Record", ["Imprisoned", "Past record", "Clean record"]),
+	new AttributeContainer("Communte Style", ["Car", "Bike", "Public transportation"])
+	];
+
 	test();
 }
+
+//new AttributeContainer("", []),
 
 /*
 * Dynamically generate the UI
@@ -70,15 +93,12 @@ $(document).ready(function(){
 		
 		var candidateName = $('<p class="candidate-name"></p>');
 		$(candidateName).text(candidate.name);
-		var candidateLocation = $('<p class="candidate-location></p>">');
-		$(candidateLocation).text(candidate.location);
-		var candidateParty = $('<p class="candidate-party"></p>');
-		$(candidateParty).text(candidate.party);
+		var candidateInfo = $('<p class="candidate-info"></p>');
+		$(candidateInfo).text(candidate.location + " " + candidate.party);
 		var policyHeader = $('<h3 class="policy-header">Policies</h3>');
 
 		candidateDiv.append(candidateName);
-		candidateDiv.append(candidateLocation);
-		candidateDiv.append(candidateParty);
+		candidateDiv.append(candidateInfo);
 		candidateDiv.append(policyHeader);
 
 		for(var pIndex = 0; pIndex < candidate.policies.length; pIndex++){
@@ -100,6 +120,9 @@ $(document).ready(function(){
 			candidateDiv.append(policyEffects);
 		}
 
+		var seperator = $('<hr class="candidate-seperator">');
+		candidateDiv.append(seperator);
+
 		containerDiv.append(candidateDiv);
 	}
 
@@ -108,6 +131,7 @@ $(document).ready(function(){
 });
 
 function test(){
+	
 	citizens.push(new Citizen("t1", ["good"]));
 	citizens.push(new Citizen("t2", ["bad"]));
 	citizens.push(new Citizen("t3", ["good"]));
