@@ -1,7 +1,9 @@
 var citizens = [];
 var candidates = [];
 
+var availableParties = [];
 var availableCitizenAttributes = [];
+var availableLocations = [];
 
 function AttributeContainer(name, listOfAttributes){
 	this.name = name;
@@ -75,7 +77,11 @@ function init(){
 	new AttributeContainer("Criminal Record", ["Imprisoned", "Past record", "Clean record"]),
 	new AttributeContainer("Communte Style", ["Car", "Bike", "Public transportation"])
 	];
-
+	availableParties = ["ReDublican Party", "DemoRat Party", "Ibertarian Party", 
+	"Lependent Party", "Labo Party", "Riberal Party"];
+	availableLocations = ["Slightly New York", "The Outback", "Mars", "ISS", "Kalifornia",
+	"FloorIda", "Wishonsolo", "The Choclate Factory", "Paris, Le French", "The North Pole", 
+	"West Korea", "Mother Russia", "象形字關転"];
 	test();
 }
 
@@ -131,10 +137,22 @@ $(document).ready(function(){
 });
 
 function test(){
-	
+	for(var cIndex = 0; cIndex < 100; cIndex++){
+		var party = getRandomParty();
+		var attributes = [];
+		for(aIndex = 0; aIndex < availableCitizenAttributes.length; aIndex++){
+			attributes.push(availableCitizenAttributes[aIndex].getAttribute());
+		}
+		//console.log(party + " " + attributes); //These results are pretty funny
+		citizens.push(new Citizen(party, attributes));
+	}
 	citizens.push(new Citizen("t1", ["good"]));
 	citizens.push(new Citizen("t2", ["bad"]));
 	citizens.push(new Citizen("t3", ["good"]));
 	candidates.push(new Candidate("Senator Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
 	candidates.push(new Candidate("Mayor Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
+}
+
+function getRandomParty(){
+	return availableParties[Math.floor(Math.random() * availableParties.length)];	
 }
