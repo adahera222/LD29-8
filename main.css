@@ -1,0 +1,10 @@
+body {
+	background-color: #cfcfcf;
+}
+
+.container {
+	/* visibility: hidden; */
+	margin-left: 25%;
+	margin-right: 25%;
+	background-color: white; 
+}
