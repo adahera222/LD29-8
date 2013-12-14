@@ -4,6 +4,7 @@ var candidates = [];
 var availableParties = [];
 var availableCitizenAttributes = [];
 var availableLocations = [];
+var availablePolicies = [];
 
 function AttributeContainer(name, listOfAttributes){
 	this.name = name;
@@ -12,6 +13,15 @@ function AttributeContainer(name, listOfAttributes){
 
 AttributeContainer.prototype.getAttribute = function(){
 	return this.listOfAttributes[Math.floor(Math.random() * this.listOfAttributes.length)];	
+}
+
+function PolicyContainer(name, listOfPolicies){
+	this.name = name;
+	this.listOfPolicies = listOfPolicies;
+}
+
+PolicyContainer.prototype.getPolicy = function(){
+	return this.listOfPolicies[Math.floor(Math.random() * this.listOfPolicies.length)];	
 }
 
 function Citizen(party, attributes){
@@ -75,7 +85,55 @@ function init(){
 	new AttributeContainer("Family", ["Parent", "Not parent"]),
 	new AttributeContainer("Military", ["Active duty", "Veteran", "Civilian"]),
 	new AttributeContainer("Criminal Record", ["Imprisoned", "Past record", "Clean record"]),
-	new AttributeContainer("Communte Style", ["Car", "Bike", "Public transportation"])
+	new AttributeContainer("Communte Style", ["Car", "Bike", "Public transportation"]),
+	new AttributeContainer("Activist", ["Anti-Violence", "Human Rights", "Not Activist"])
+	];
+	availablePolicies = [
+		/*new PolicyContainer("Tax",
+		[
+			new Policy("Raise middle class tax", "", "Middle class"),
+			new Policy("Lower middle class tax", "Middle class", ""),
+			new Policy("Raise upper class tax & lower the middle class tax", "Middle class", "Upper class")
+		]),*/
+		new PolicyContainer("Public Transportation",[
+			new Policy("Lower public transportation budget", "Car", "Public transportation"),
+			new Policy("Raise public transportation budget", "Public transportation", "Car"),
+			new Policy("Lower public transportation fair", "Public transportation", "Car"),
+			new Policy("Raise public transportation fair", "Car", "Public transportation"),
+			new Policy("Expand public transportation network", "Public transportation", "Car"),
+			new Policy("Decrease public transportation network", "Car", "Public transportation")
+		]),
+		new PolicyContainer("Automobiles", [
+			new Policy("Raise car tax", "Public transportation", "Car"),
+			new Policy("Lower car tax", "Car", "Public transportation"),
+			new Policy("Raise gas prices", "Bike", "Car"),
+			new Policy("Lower gas prices", "Car", "Bike"),
+			new Policy("Give tax benefits to zero emision commuters", "Bike", "Car")
+		]),
+		new PolicyContainer("Military", [
+			new Policy("Lower Military budget", "Anti-Violence", "Active duty"),
+			new Policy("Raise Military budget", "Active duty", "Anti-Violence"),
+			new Policy("Increse veteran benefits", "Veteran", "Civilian"),
+			new Policy("Decrease veteran benefits", "Civilian", "Veteran"),
+			new Policy("Increase Military research budget", "Active duty", "Anti-Violence"),
+			new Policy("Reduce Military research budget", "Anti-Violence", "Active duty")
+		]),
+		new PolicyContainer("Employment", [
+			new Policy("Raise unemployment benefits", "Not Employed", "Employed"),
+			new Policy("Lower unemployment benefits", "Employed", "Not Employed"),
+			new Policy("Raise income tax", "Transportation", "Employed"),
+			new Policy("Lower income tax", "Employed", "Transportation")
+		]),
+		new PolicyContainer("Business", [
+			new Policy("Raise Business tax", "Transportation", "Business owner"),
+			new Policy("Lower Business tax", "Business owner", "Transportation"),
+			new Policy("Support small Business", "Business owner", "Upper class")
+		])
+
+		//Criminal stuff
+		//Gov. aid
+		//Law
+
 	];
 	availableParties = ["ReDublican Party", "DemoRat Party", "Ibertarian Party", 
 	"Lependent Party", "Labo Party", "Riberal Party"];
@@ -84,8 +142,6 @@ function init(){
 	"West Korea", "Mother Russia", "象形字關転"];
 	test();
 }
-
-//new AttributeContainer("", []),
 
 /*
 * Dynamically generate the UI
@@ -119,10 +175,10 @@ $(document).ready(function(){
 			var posEffect = (policy.getPeoplePositivelyAffected() / totalCitizens) * 100;
 			var negEffect = (policy.getPeopleNegativelyAffected() / totalCitizens) * 100;
 			var percentEffected = negEffect + posEffect;
-			posEffect = posEffect.toFixed(2);
-			negEffect = negEffect.toFixed(2);
-			percentEffected = percentEffected.toFixed(2);
-			$(policyEffects).text(percentEffected + "% of the population is effected by this policy. Of these people " + posEffect + "% positively and " + negEffect + "% negatively.")
+			posEffect = posEffect.toFixed(0);
+			negEffect = negEffect.toFixed(0);
+			percentEffected = percentEffected.toFixed(0);
+			$(policyEffects).text(percentEffected + "% of the population is effected by this policy. Of these people " + posEffect + "% are affected positively and " + negEffect + "% are affected negatively.")
 			candidateDiv.append(policyEffects);
 		}
 
@@ -137,6 +193,13 @@ $(document).ready(function(){
 });
 
 function test(){
+	generateCitizens();
+	generateCandidates();
+	//candidates.push(new Candidate("Senator Poopy Head", "Mars", "Toilet party", [new Policy("Raise middle class tax", "", "Middle class"), new Policy("Test policy 2", "bad", "good")]));
+	//candidates.push(new Candidate("Mayor Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
+}
+
+function generateCitizens(){
 	for(var cIndex = 0; cIndex < 100; cIndex++){
 		var party = getRandomParty();
 		var attributes = [];
@@ -146,13 +209,24 @@ function test(){
 		//console.log(party + " " + attributes); //These results are pretty funny
 		citizens.push(new Citizen(party, attributes));
 	}
-	citizens.push(new Citizen("t1", ["good"]));
-	citizens.push(new Citizen("t2", ["bad"]));
-	citizens.push(new Citizen("t3", ["good"]));
-	candidates.push(new Candidate("Senator Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
-	candidates.push(new Candidate("Mayor Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
+}
+
+function generateCandidates(){
+	for(var cIndex = 0; cIndex < 3; cIndex++){
+		var party = getRandomParty();
+		var policies = [];
+		for(pIndex = 0; pIndex < availablePolicies.length; pIndex++){
+			policies.push(availablePolicies[pIndex].getPolicy());
+		}
+		//console.log(party + " " + policies);
+		candidates.push(new Candidate("Test name # " + cIndex, getRandomLocation(), party, policies));
+	}
 }
 
 function getRandomParty(){
 	return availableParties[Math.floor(Math.random() * availableParties.length)];	
+}
+
+function getRandomLocation(){
+	return availableLocations[Math.floor(Math.random() * availableLocations.length)];	
 }
