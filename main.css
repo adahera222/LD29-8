@@ -72,3 +72,29 @@ body {
 	width: 50px;
 	padding-left: 25px;
 }
+
+.green-half {
+	width: 50%;
+	height: 64px;
+	background-color: green;
+	float: right;
+}
+
+.red-half {
+	width: 50%;
+	height: 64px;
+	background-color: red;
+	float: left;
+}
+
+.marker {
+	width: 2px;
+	height: 64px;
+	border-width: 0px;
+	background-color: black;
+	position: absolute; 
+}
+
+.center-text {
+	text-align: center;
+}

@@ -1,13 +1,14 @@
 var citizens = [];
 var candidates = [];
 
-var societyBar = 0;
-
 var availableParties = [];
 var availableCitizenAttributes = [];
 var availableLocations = [];
 var availablePolicies = [];
 var availableNames = [];
+
+var electedCandidate;
+var societyBar = 0;
 
 function AttributeContainer(name, listOfAttributes){
 	this.name = name;
@@ -147,7 +148,9 @@ function init(){
 	"West Korea", "Mother Russia", "Unknown", "CanaSorry"];
 	availableNames = ["Congressman Bill", "Prince George", "Bob", "Billy bob", "Actor Bill Murray", 
 	"Joe the plumber", "O' Lama", "Charles the 3rd", "Mayor Doomberg", "Astronaut Chris Hadfield", "Kony(2012)"];
-	test();
+
+	generateCitizens();
+	generateCandidates();
 }
 
 /*
@@ -221,15 +224,8 @@ $(document).ready(function(){
 
 });
 
-function test(){
-	generateCitizens();
-	generateCandidates();
-	//candidates.push(new Candidate("Senator Poopy Head", "Mars", "Toilet party", [new Policy("Raise middle class tax", "", "Middle class"), new Policy("Test policy 2", "bad", "good")]));
-	//candidates.push(new Candidate("Mayor Poopy Head", "Mars", "Toilet party", [new Policy("Test policy", "good", "bad"), new Policy("Test policy 2", "bad", "good")]));
-}
-
 function generateCitizens(){
-	for(var cIndex = 0; cIndex < 200; cIndex++){
+	for(var cIndex = 0; cIndex < 400; cIndex++){
 		var party = getRandomParty();
 		var attributes = [];
 		for(aIndex = 0; aIndex < availableCitizenAttributes.length; aIndex++){
@@ -253,34 +249,61 @@ function generateCandidates(){
 	}
 }
 
+var policyIndex = 0;
+var totalPolicies;
+
+var graphContainer;
+var marker;
+
 function handleVote(id){
 	$('.candidate-container').remove();
-	var candidate = getCanidateByID(id);
-	for(var index = 0; index < candidate.policies.length; index++){
-		var policy = candidate.policies[index];
-		var posPeople = policy.getPeoplePositivelyAffected();
-		var negPeople = policy.getPeopleNegativelyAffected();
-		societyBar += posPeople - negPeople;
-		console.log("Round 1 = " + societyBar);
-/*		var citizensLeft = citizens.length - (posPeople + negPeople);
-		if(citizensLeft < citizens.length){
-			var newPos = 0;
-			var newNeg = 0;
-			for(var cIndex = 0; cIndex < citizensLeft; cIndex++){
-				var picked = getRandomNumberInRange(0, posPeople + negPeople);
-				if(picked <= posPeople){
-					newPos++;
-				}
-				else{
-					newNeg++;
-				}
-			}
-			//ocietyBar += (newPos - negPeople) * 2;
-			//console.log("Round 2 = " + societyBar);
-		}*/
+	electedCandidate = getCanidateByID(id);
+	totalPolicies = electedCandidate.policies.length;
+
+	//Create new UI
+ 	graphContainer = $('<div class="graph-container"></div>');
+	graphContainer.append('<div class="green-half"></div>');
+	graphContainer.append('<div id="red-half" class="red-half"></div>');
+	marker = $('<div class="marker"></div>');
+	graphContainer.append(marker);
+	$('.container').append(graphContainer);
+	$('.container').append('<h3 class="center-text">The Society Bar!</p>');
+	$('.container').append('<p class="center-text">Watch how your leader changes society</p>');
+	$('.container').append('<h2 class="current-policy">The current policy is...</h2>');
+
+	processPolicies()
+}
+
+function processPolicies(){
+	var policy = electedCandidate.policies[policyIndex];
+	var posPeople = policy.getPeoplePositivelyAffected();
+	var negPeople = policy.getPeopleNegativelyAffected();
+	societyBar += posPeople - negPeople;
+	console.log("Round = " + societyBar);
+
+	var halfWidth = $('.red-half').width();
+	console.log("H: " + halfWidth);
+	$(marker).css("margin-left", halfWidth + societyBar + "px");
+	$('.current-policy').text(policy.title);
+
+	policyIndex++;
+	if(policyIndex < totalPolicies){
+		setTimeout(processPolicies, 2000);
 	}
+	else{
+		displayEndGame();
+	}
+}
+
+function displayEndGame(){
+	if(societyBar >= 0){
+		$('.container').append('<h1 class="win">Congrats, your vote was a good vote!');
+	}
+	else{
+		$('.container').append('<h1 class="win">Congrats, you took society a step backwards. (You lost).');
+	}
+	//Credit stuff
 	console.log("Final = " + societyBar);
-	//Show user if they won or lost, offer reset, credits/code	
 }
 
 function getCanidateByID(id){
