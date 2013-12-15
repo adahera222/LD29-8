@@ -195,8 +195,8 @@ $(document).ready(function(){
 			var grayBar = $('<div class="graph-box graph-gray"></div>');
 			var redBar = $('<div class="graph-box graph-red"></div>');
 			var greenBar = $('<div class="graph-box graph-green"></div>');
-			$(greenBar).css("width", posEffect + "px");
-			$(redBar).css({"width": negEffect + "px", "padding-left": posEffect + "px"});
+			$(greenBar).css("width", posEffect * 2 + "px");
+			$(redBar).css({"width": negEffect * 2 + "px", "padding-left": posEffect * 2 + "px"});
 
 			graphContainer.append(grayBar);
 			graphContainer.append(redBar);
