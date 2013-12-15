@@ -303,6 +303,8 @@ function displayEndGame(){
 		$('.container').append('<h1 class="win">Congrats, you took society a step backwards. (You lost).');
 	}
 	//Credit stuff
+	$('.container').append('<p class="center-text">Refresh to reset!</p>');
+	$('.container').append('<a href="https://twitter.com/Thedeadlybutter">@thedeadlybutter</a>');
 	console.log("Final = " + societyBar);
 }
 

@@ -11,6 +11,13 @@ body {
 	background-color: white; 
 }
 
+.help-container {
+	margin-left: 25%;
+	margin-right: 25%;
+	background-color: white; 
+	color: black;
+}
+
 .candidate-container {
 	padding-top: 2%;
 }
